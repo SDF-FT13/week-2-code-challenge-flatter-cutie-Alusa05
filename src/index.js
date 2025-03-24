@@ -52,5 +52,24 @@ votesForm.addEventListener('submit', (e) => {
       voteCount.textContent = currentCharacter.votes;
     }
   }
+  resetVotesButton.addEventListener('click', () => {
+    currentCharacter.votes = 0;
+    updateVotesDisplay();
+  });
+  characterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('name');
+    const imageInput = document.getElementById('image');
+    const newCharacter = {
+      name: nameInput.value,
+      image: imageInput.value,
+      votes: 0
+    };
+    characters.push(newCharacter);
+    displayCharacters(characters);
+    showCharacterDetails(newCharacter);
+    nameInput.value = '';
+    imageInput.value = '';
+  });
 });
 
