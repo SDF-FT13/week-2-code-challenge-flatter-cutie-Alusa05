@@ -27,4 +27,30 @@ function displayCharacters(characters) {
         characterBar.appendChild(span);
     });
 }
+function showCharacterDetails(character){
+    currentCharacter = character;
+    detailedInfo.innerHTML = `
+    <img src="${character.image}"  alt= "{character.name}"/>
+    <h2>${character.name}</h2>
+    <p>Votes: <span id= "vote-count">${character.votes}</span></p>`;
+}
+
+votesForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const votesInput = document.getElementById('votes');
+    const votes = parseInt(votesInput.value, 10);
+    if (!isNaN(votes)) {
+      currentCharacter.votes += votes;
+      updateVotesDisplay();
+      votesInput.value = '';
+    }
+  });
+  
+  function updateVotesDisplay() {
+    const voteCount = document.getElementById('vote-count');
+    if (voteCount) {
+      voteCount.textContent = currentCharacter.votes;
+    }
+  }
 });
+
