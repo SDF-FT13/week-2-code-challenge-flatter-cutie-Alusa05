@@ -1,70 +1,70 @@
 document.addEventListener("DOMContentLoaded", () => {
     const characterBar = document.getElementById("character-bar");
-    const characterName = document.getElementById("name");
-    const characterImage = document.getElementById("image");
-    const characterVotes = document.getElementById("vote-count");
-    const voteForm = document.getElementById("votes-form");
+    const detailedInfo = document.getElementById("detailed-info");
+    const nameElement = document.getElementById("name");
+    const imageElement = document.getElementById("image");
+    const votesElement = document.getElementById("vote-count");
+    const votesForm = document.getElementById("votes-form");
     const resetButton = document.getElementById("reset-btn");
-
+    const characterForm = document.getElementById("character-form");
+  
+    let characters = [];
     let currentCharacter = null;
-
-    // Fetch and display characters in the character bar
+  
+    // Fetch all characters and display them in the character bar
     function fetchCharacters() {
-        fetch("http://localhost:3000/characters")
-            .then(response => response.json())
-            .then(data => {
-                console.log("Characters fetched:", data); // Debugging log
-                characterBar.innerHTML = "";
-                data.forEach(character => createCharacterSpan(character));
-            })
-            .catch(error => console.error("Error fetching characters:", error));
+      fetch("http://localhost:3000/characters")
+        .then(response => response.json())
+        .then(data => {
+          characters = data;
+          renderCharacterBar();
+        })
+        .catch(error => console.error("Error fetching characters:", error));
     }
-
-    // Create a span for each character
-    function createCharacterSpan(character) {
+  
+    // Render all characters in the character bar
+    function renderCharacterBar() {
+      characterBar.innerHTML = "";
+      characters.forEach(character => {
         const span = document.createElement("span");
         span.textContent = character.name;
-        span.classList.add("character");
-
-        // Add event listener to display character details on click
-        span.addEventListener("click", () => {
-            displayCharacter(character);
-        });
-
+        span.addEventListener("click", () => displayCharacter(character));
         characterBar.appendChild(span);
+      });
     }
-
-    // Display character details in the detailed info section
+  
+    // Display character details
     function displayCharacter(character) {
-        currentCharacter = character;
-        characterName.textContent = character.name;
-        characterImage.src = character.image;
-        characterImage.alt = character.name;
-        characterVotes.textContent = character.votes;
+      currentCharacter = character;
+      nameElement.textContent = character.name;
+      imageElement.src = character.image;
+      imageElement.alt = character.name;
+      votesElement.textContent = character.votes;
     }
-
+  
     // Handle vote submission
-    voteForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const voteInput = document.getElementById("votes");
-        const newVotes = parseInt(voteInput.value, 10);
-
-        if (!isNaN(newVotes) && currentCharacter) {
-            currentCharacter.votes += newVotes;
-            characterVotes.textContent = currentCharacter.votes;
-        }
-
-        voteInput.value = ""; // Clear input field
+    votesForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!currentCharacter) return;
+      
+      const votesInput = document.getElementById("votes");
+      const votesToAdd = parseInt(votesInput.value) || 0;
+      
+      currentCharacter.votes += votesToAdd;
+      votesElement.textContent = currentCharacter.votes;
+      votesInput.value = "";
     });
-
-    // Handle resetting votes
+  
+    // Handle reset votes
     resetButton.addEventListener("click", () => {
-        if (currentCharacter) {
-            currentCharacter.votes = 0;
-            characterVotes.textContent = currentCharacter.votes;
-        }
+      if (currentCharacter) {
+        currentCharacter.votes = 0;
+        votesElement.textContent = 0;
+      }
     });
-
-    // Fetch characters on page load
+  
+    
+  
+    // Initialize the app
     fetchCharacters();
-});
+  });
