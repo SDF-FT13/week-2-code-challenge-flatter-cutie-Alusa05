@@ -1,4 +1,4 @@
-Document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const characterBar = document.getElementById("character-bar");
     const characterName = document.getElementById("name");
     const characterImage = document.getElementById("image");
